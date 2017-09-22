@@ -35,8 +35,7 @@ def ApplyStockAnalysis(stock,analysis):
     day = 1
     worth = []
     for order in analysis:                
-        if order == "+":
-                        
+        if order == "+":        
             position += Money/stock[day]
             Money = 0.0
         elif order == "-":
@@ -51,12 +50,15 @@ market = markets[0]
 path = r'C:\Users\Boaz\Documents\stocks\work with stocks\data\{}.msg'.format(market)
 data = pd.read_msgpack(path)
 data =  CleanStocks(data)
-stock = data['A']
-analysis = AnalyzeStock(stock)
-revenue,orders = ApplyStockAnalysis(stock,analysis)
-plt.plot(stock.values/data['A'][0]*100)
-plt.plot(orders)
-plt.legend(['stock','algo'])
-plt.title('Normalized graph for stock "A" VS Algo')
+results = dict()
+for stock in data:        
+    analysis = AnalyzeStock(data[stock])
+    revenue,orders = ApplyStockAnalysis(data[stock],analysis)
+    results[stock] = [data[stock].values/data[stock][0]*100,orders]
+    print('Finished analyzing stock {}'.format(stock))
+    '''
+    plt.plot(orders)
+    plt.legend(['stock','algo'])
+    plt.title('Normalized graph for stock "A" VS Algo')
 
-    
+    '''
